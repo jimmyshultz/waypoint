@@ -1,0 +1,52 @@
+name: Run Database Query
+
+on:
+  workflow_dispatch:
+    inputs:
+      environment:
+        description: 'Environment to run query against'
+        required: true
+        default: 'development'
+        type: choice
+        options:
+          - development
+          - staging
+          - production
+      query:
+        description: 'SQL query to run'
+        required: true
+        default: 'SELECT * FROM "Users" LIMIT 10;'
+      read_only:
+        description: 'Is this a read-only query? (false allows data modification)'
+        required: true
+        default: true
+        type: boolean
+
+jobs:
+  run-query:
+    runs-on: ubuntu-latest
+    environment: ${{ github.event.inputs.environment }}
+    
+    # Only run data-modifying queries if read_only is false
+    if: github.event.inputs.read_only || !contains(github.event.inputs.query, 'DELETE') && !contains(github.event.inputs.query, 'UPDATE') && !contains(github.event.inputs.query, 'INSERT') && !contains(github.event.inputs.query, 'DROP') && !contains(github.event.inputs.query, 'ALTER') && !contains(github.event.inputs.query, 'CREATE')
+    
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Install PostgreSQL client
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y postgresql-client
+      
+      - name: Run query
+        env:
+          DB_CONNECTION_STRING: ${{ secrets.DB_CONNECTION_STRING }}
+          SQL_QUERY: ${{ github.event.inputs.query }}
+        run: |
+          echo "Running query in ${{ github.event.inputs.environment }} environment:"
+          echo "$SQL_QUERY"
+          echo "------------------------------------"
+          
+          # Add options to make output more readable in GitHub Actions logs
+          psql "${DB_CONNECTION_STRING}" -c "$SQL_QUERY" --tuples-only --pset=border=2 

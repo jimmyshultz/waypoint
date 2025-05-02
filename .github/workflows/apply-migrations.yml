@@ -1,0 +1,46 @@
+name: Apply Database Migrations
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - 'migrations/**'
+  workflow_dispatch:
+    inputs:
+      environment:
+        description: 'Environment to run migrations against'
+        required: true
+        default: 'development'
+        type: choice
+        options:
+          - development
+          - staging
+          - production
+
+jobs:
+  apply-migrations:
+    runs-on: ubuntu-latest
+    environment: ${{ github.event.inputs.environment || 'development' }}
+    
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Install PostgreSQL client
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y postgresql-client
+      
+      - name: Apply migrations
+        env:
+          DB_CONNECTION_STRING: ${{ secrets.DB_CONNECTION_STRING }}
+        run: |
+          echo "Applying migration: migrations/01_initial_schema.sql"
+          psql "${DB_CONNECTION_STRING}" -f migrations/01_initial_schema.sql
+          
+      - name: Verify migration
+        env:
+          DB_CONNECTION_STRING: ${{ secrets.DB_CONNECTION_STRING }}
+        run: |
+          echo "Verifying migration..."
+          psql "${DB_CONNECTION_STRING}" -c "SELECT * FROM \"DbVersionInfo\";" 

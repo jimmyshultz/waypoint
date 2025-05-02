@@ -1,0 +1,71 @@
+name: Database Backup
+
+on:
+  schedule:
+    # Run daily at 3 AM UTC
+    - cron: '0 3 * * *'
+  workflow_dispatch:
+    inputs:
+      environment:
+        description: 'Environment to backup'
+        required: true
+        default: 'production'
+        type: choice
+        options:
+          - development
+          - staging
+          - production
+
+jobs:
+  backup-database:
+    runs-on: ubuntu-latest
+    environment: ${{ github.event.inputs.environment || 'production' }}
+    
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Install PostgreSQL client
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y postgresql-client
+      
+      - name: Generate backup date
+        id: date
+        run: echo "BACKUP_DATE=$(date +%Y%m%d_%H%M%S)" >> $GITHUB_OUTPUT
+      
+      - name: Create backup
+        env:
+          DB_CONNECTION_STRING: ${{ secrets.DB_CONNECTION_STRING }}
+          BACKUP_DATE: ${{ steps.date.outputs.BACKUP_DATE }}
+          ENVIRONMENT: ${{ github.event.inputs.environment || 'production' }}
+        run: |
+          echo "Creating backup of $ENVIRONMENT database..."
+          pg_dump "${DB_CONNECTION_STRING}" > "waypoint_backup_${ENVIRONMENT}_${BACKUP_DATE}.sql"
+      
+      - name: Compress backup
+        run: |
+          gzip "waypoint_backup_${{ github.event.inputs.environment || 'production' }}_${{ steps.date.outputs.BACKUP_DATE }}.sql"
+      
+      # Option 1: Upload to GitHub artifacts (retention limited)
+      - name: Upload backup as artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: database-backup-${{ github.event.inputs.environment || 'production' }}-${{ steps.date.outputs.BACKUP_DATE }}
+          path: waypoint_backup_${{ github.event.inputs.environment || 'production' }}_${{ steps.date.outputs.BACKUP_DATE }}.sql.gz
+          retention-days: 30
+      
+      # Option 2: Upload to S3/Azure/GCP for long-term storage
+      # Uncomment and configure when needed
+      # - name: Upload to S3
+      #   if: false  # Disabled until configured
+      #   uses: aws-actions/configure-aws-credentials@v4
+      #   with:
+      #     aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
+      #     aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+      #     aws-region: us-east-1
+      #
+      # - name: Upload backup to S3
+      #   if: false  # Disabled until configured
+      #   run: |
+      #     aws s3 cp waypoint_backup_${{ github.event.inputs.environment || 'production' }}_${{ steps.date.outputs.BACKUP_DATE }}.sql.gz s3://your-bucket/backups/ 

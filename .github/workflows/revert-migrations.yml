@@ -1,0 +1,67 @@
+name: Revert Database Migrations
+
+on:
+  workflow_dispatch:
+    inputs:
+      environment:
+        description: 'Environment to revert migrations from'
+        required: true
+        default: 'development'
+        type: choice
+        options:
+          - development
+          - staging
+          - production
+      confirmation:
+        description: 'Type "I UNDERSTAND" to confirm reversion (this will DELETE ALL DATA)'
+        required: true
+
+jobs:
+  revert-migrations:
+    runs-on: ubuntu-latest
+    environment: ${{ github.event.inputs.environment }}
+    
+    # Only run if confirmation is correct
+    if: github.event.inputs.confirmation == 'I UNDERSTAND'
+    
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Install PostgreSQL client
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y postgresql-client
+      
+      - name: Double confirmation
+        uses: actions/github-script@v7
+        with:
+          script: |
+            const message = `⚠️ WARNING: You are about to REVERT ALL MIGRATIONS in the ${process.env.ENVIRONMENT} environment.
+            This will DELETE ALL DATA in the database.
+            
+            If this is not what you want, cancel this workflow now!
+            
+            Waiting 15 seconds before proceeding...`;
+            
+            console.log(message);
+            
+            // Wait 15 seconds for potential cancellation
+            await new Promise(resolve => setTimeout(resolve, 15000));
+        env:
+          ENVIRONMENT: ${{ github.event.inputs.environment }}
+      
+      - name: Revert migrations
+        env:
+          DB_CONNECTION_STRING: ${{ secrets.DB_CONNECTION_STRING }}
+        run: |
+          echo "Reverting migration: migrations/01_initial_schema_down.sql"
+          psql "${DB_CONNECTION_STRING}" -f migrations/01_initial_schema_down.sql
+          
+      - name: Verify reversion
+        env:
+          DB_CONNECTION_STRING: ${{ secrets.DB_CONNECTION_STRING }}
+        run: |
+          echo "Verifying tables have been dropped..."
+          echo "This should return an error if tables no longer exist:"
+          psql "${DB_CONNECTION_STRING}" -c "SELECT COUNT(*) FROM \"Users\";" || echo "Confirmed: Tables have been dropped" 
