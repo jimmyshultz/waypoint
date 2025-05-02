@@ -1,0 +1,43 @@
+name: .NET Backend Build
+
+on:
+  push:
+    branches: [ main ]
+    paths:
+      - 'backend/**'
+      - '.github/workflows/backend-build.yml'
+  pull_request:
+    branches: [ main ]
+    paths:
+      - 'backend/**'
+      - '.github/workflows/backend-build.yml'
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    
+    steps:
+    - name: Checkout repository
+      uses: actions/checkout@v4
+      
+    - name: Setup .NET
+      uses: actions/setup-dotnet@v4
+      with:
+        dotnet-version: 8.0.x
+        
+    - name: Restore dependencies
+      run: dotnet restore backend/Waypoint.sln
+      
+    - name: Build solution
+      run: dotnet build backend/Waypoint.sln --no-restore --configuration Release
+      
+    # Uncomment when you have tests ready
+    # - name: Run tests
+    #   run: dotnet test backend/Waypoint.sln --no-build --configuration Release --verbosity normal
+      
+    - name: Upload build artifacts
+      uses: actions/upload-artifact@v4
+      with:
+        name: build-artifacts
+        path: backend/**/bin/Release/net8.0/
+        retention-days: 7 

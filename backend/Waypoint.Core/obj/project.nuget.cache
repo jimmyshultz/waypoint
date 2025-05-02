@@ -1,0 +1,10 @@
+{
+  "version": 2,
+  "dgSpecHash": "ASg3oaa5ql+ePD9WNwhkTWN+Qf+TdEibfKzKaeYC6yl/DbPRBRc0+bUl5vKOmKUdyIr9nRrBV07XMAM7NuuFcw==",
+  "success": true,
+  "projectFilePath": "/Users/jimmyshultz/Desktop/Development/waypoint/backend/Waypoint.Core/Waypoint.Core.csproj",
+  "expectedPackageFiles": [
+    "/Users/jimmyshultz/.nuget/packages/microsoft.extensions.dependencyinjection.abstractions/8.0.0/microsoft.extensions.dependencyinjection.abstractions.8.0.0.nupkg.sha512"
+  ],
+  "logs": []
+}

@@ -1,0 +1,16 @@
+/Users/jimmyshultz/Desktop/Development/waypoint/backend/Waypoint.Identity/bin/Debug/net8.0/Waypoint.Identity.deps.json
+/Users/jimmyshultz/Desktop/Development/waypoint/backend/Waypoint.Identity/bin/Debug/net8.0/Waypoint.Identity.dll
+/Users/jimmyshultz/Desktop/Development/waypoint/backend/Waypoint.Identity/bin/Debug/net8.0/Waypoint.Identity.pdb
+/Users/jimmyshultz/Desktop/Development/waypoint/backend/Waypoint.Identity/bin/Debug/net8.0/Waypoint.Core.dll
+/Users/jimmyshultz/Desktop/Development/waypoint/backend/Waypoint.Identity/bin/Debug/net8.0/Waypoint.Core.pdb
+/Users/jimmyshultz/Desktop/Development/waypoint/backend/Waypoint.Identity/obj/Debug/net8.0/Waypoint.Identity.csproj.AssemblyReference.cache
+/Users/jimmyshultz/Desktop/Development/waypoint/backend/Waypoint.Identity/obj/Debug/net8.0/Waypoint.Identity.GeneratedMSBuildEditorConfig.editorconfig
+/Users/jimmyshultz/Desktop/Development/waypoint/backend/Waypoint.Identity/obj/Debug/net8.0/Waypoint.Identity.AssemblyInfoInputs.cache
+/Users/jimmyshultz/Desktop/Development/waypoint/backend/Waypoint.Identity/obj/Debug/net8.0/Waypoint.Identity.AssemblyInfo.cs
+/Users/jimmyshultz/Desktop/Development/waypoint/backend/Waypoint.Identity/obj/Debug/net8.0/Waypoint.Identity.csproj.CoreCompileInputs.cache
+/Users/jimmyshultz/Desktop/Development/waypoint/backend/Waypoint.Identity/obj/Debug/net8.0/Waypoint.Identity.sourcelink.json
+/Users/jimmyshultz/Desktop/Development/waypoint/backend/Waypoint.Identity/obj/Debug/net8.0/Waypoint.Identity.csproj.CopyComplete
+/Users/jimmyshultz/Desktop/Development/waypoint/backend/Waypoint.Identity/obj/Debug/net8.0/Waypoint.Identity.dll
+/Users/jimmyshultz/Desktop/Development/waypoint/backend/Waypoint.Identity/obj/Debug/net8.0/refint/Waypoint.Identity.dll
+/Users/jimmyshultz/Desktop/Development/waypoint/backend/Waypoint.Identity/obj/Debug/net8.0/Waypoint.Identity.pdb
+/Users/jimmyshultz/Desktop/Development/waypoint/backend/Waypoint.Identity/obj/Debug/net8.0/ref/Waypoint.Identity.dll

@@ -1,186 +1,23 @@
-# Waypoint Application Architecture
+# Waypoint Application
 
 ## Overview
 A web application that helps touring musicians track and manage their network of hosts across the USA. The application allows users to store information about potential hosts, previous stays, and use this data to plan future tours.
 
 ## Tech Stack
-- **Database**: PostgreSQL
+- **Database**: PostgreSQL (hosted on Neon)
 - **Backend**: C# .NET Core
-- **Frontend**: React
-- **Authentication**: ASP.NET Core Identity
+- **Frontend**: React (coming soon)
+- **Authentication**: ASP.NET Core Identity with JWT
 
-## System Architecture
+## Current Status
+The Waypoint application is under active development:
 
-### 1. Database Layer
-- PostgreSQL database with the following main tables:
-  - Users (musicians)
-  - Hosts (potential places to stay)
-  - Stays (historical records of stays)
-  - Tours/Events (optional future expansion)
-
-### 2. Backend API Layer
-- ASP.NET Core Web API
-- Entity Framework Core for ORM
-- RESTful endpoints for:
-  - User authentication and management
-  - Host CRUD operations
-  - Stay history tracking
-  - Search and filtering functionality
-  - (Optional) Tour planning integration
-
-### 3. Frontend Layer
-- React Single Page Application (SPA)
-- Component-based UI with responsive design
-- Mapping functionality for geographic visualization
-- State management for application data
-
-### 4. Authentication Layer
-- ASP.NET Core Identity for user authentication
-- JWT tokens for API authentication
-- Role-based access control
-- Secure cookie handling
-
-## Database Schema
-
-### Users Table
-```
-Users
-- Id (PK)
-- Email
-- PasswordHash
-- UserName
-- CreatedAt
-- UpdatedAt
-```
-
-### Hosts Table
-```
-Hosts
-- Id (PK)
-- UserId (FK to Users)
-- Name
-- PhoneNumber
-- Email
-- AddressLine1
-- AddressLine2
-- City
-- State
-- ZipCode
-- Latitude
-- Longitude
-- Notes
-- CreatedAt
-- UpdatedAt
-```
-
-### Stays Table
-```
-Stays
-- Id (PK)
-- HostId (FK to Hosts)
-- StartDate
-- EndDate
-- Rating (1-5)
-- Notes
-- CreatedAt
-- UpdatedAt
-```
-
-## API Endpoints
-
-### Authentication
-- POST /api/auth/register
-- POST /api/auth/login
-- POST /api/auth/refresh-token
-- POST /api/auth/logout
-
-### Hosts
-- GET /api/hosts
-- GET /api/hosts/{id}
-- POST /api/hosts
-- PUT /api/hosts/{id}
-- DELETE /api/hosts/{id}
-- GET /api/hosts/nearby?lat={latitude}&lng={longitude}&radius={miles}
-
-### Stays
-- GET /api/stays
-- GET /api/stays/{id}
-- POST /api/stays
-- PUT /api/stays/{id}
-- DELETE /api/stays/{id}
-- GET /api/hosts/{hostId}/stays
-
-## Frontend Components
-
-### Pages
-- Login/Register
-- Dashboard
-- Host List
-- Host Detail
-- Add/Edit Host
-- Map View
-- Stay History
-- User Settings
-
-### Core Components
-- Navigation/Menu
-- Host Card
-- Map Component
-- Search/Filter Bar
-- Stay History Timeline
-- Rating Input
-- Address Form with Geocoding
-
-## Authentication Flow
-1. User registers or logs in through the frontend
-2. Backend validates credentials and issues JWT token
-3. Frontend stores token in secure storage
-4. All subsequent API requests include the JWT in Authorization header
-5. Backend middleware validates token for protected routes
-6. Token refresh mechanism to maintain session
-
-## Data Flow
-1. User actions in React trigger API calls
-2. API controller methods process requests
-3. Entity Framework Core handles database operations
-4. Data is returned to frontend as JSON
-5. React components render updated UI based on data
-
-## Security Considerations
-- HTTPS for all communication
-- Password hashing using ASP.NET Core Identity
-- JWT token expiration and refresh strategy
-- Input validation on both client and server
-- SQL injection protection via parameterized queries
-- Cross-Origin Resource Sharing (CORS) configuration
-- Protection against Cross-Site Request Forgery (CSRF)
-
-## Deployment Options
-- Azure App Service or GCP alternative for hosting the .NET backend
-- Neon for PostgreSQL
-- Vercel for React frontend
-- CI/CD pipeline using GitHub Actions
-
-## Future Extension Possibilities
-- Integration with calendar systems
-- Tour planning optimization
-- Host communication tools
-- Mobile application version
-- Multi-user support for bands/groups
-
-## Development Status
-
-The Waypoint application is under active development. Current progress:
-
-### Documentation
-- ✅ Database schema and structure
-- ✅ Backend architecture and API design
-- ✅ Frontend component design and UI/UX guidelines
-
-### Implementation
-- ✅ Database schema created and implemented in Neon PostgreSQL
-- 🔄 Backend implementation in progress
-- 🔄 Frontend implementation in progress
+- ✅ Database schema created and implemented
+- ✅ .NET Core API project structure set up
+- ✅ GitHub Actions workflows for database operations and backend builds
+- ✅ Basic test endpoints for database connectivity
+- 🔄 Authentication implementation in progress
+- 🔄 Frontend implementation not yet started
 
 ## Project Structure
 
@@ -192,6 +29,7 @@ waypoint/
 │   │   ├── revert-migrations.yml   # Revert database migrations
 │   │   ├── database-query.yml      # Run database queries
 │   │   ├── database-backup.yml     # Back up the database
+│   │   ├── backend-build.yml       # Build .NET backend
 │   │   └── dev-environment-setup.yml # Set up development environment
 │   ├── DEVELOPMENT.md        # Development setup guide
 │   └── workflows/README.md   # Workflows documentation
@@ -203,16 +41,25 @@ waypoint/
 │   ├── 01_initial_schema.sql        # Creates database schema
 │   ├── 01_initial_schema_down.sql   # Reverts database schema
 │   └── README.md                    # Database documentation
-├── scripts/                  # Minimal local development scripts
-│   ├── setup-local-dev.sh    # Local development setup
+├── scripts/                  # Utility scripts
+│   ├── setup-local-dev.sh    # Local development setup script
+│   ├── run-api.sh            # Script to run the API locally
 │   └── README.md             # Scripts documentation
+├── backend/                  # .NET Core backend
+│   ├── Waypoint.Api          # API project
+│   ├── Waypoint.Core         # Core domain models and interfaces
+│   ├── Waypoint.Infrastructure # Data access and external services
+│   └── Waypoint.Identity     # Authentication and user management
 ├── .env.example              # Environment variables template
-├── .gitignore                # Git ignore rules
-├── backend/                  # .NET Core backend (coming soon)
-└── frontend/                 # React frontend (coming soon)
+└── .gitignore                # Git ignore rules
 ```
 
 ## Getting Started
+
+### Prerequisites
+- .NET Core SDK 8.0 or later
+- PostgreSQL database (or Neon PostgreSQL account)
+- Git
 
 ### Initial Setup
 
@@ -228,15 +75,60 @@ There are two ways to set up the project:
 #### Option 2: Local Setup
 
 1. Clone the repository
-2. Run `./scripts/setup-local-dev.sh` to set up your local environment
-3. Edit the `.env` file with your credentials
+   ```bash
+   git clone https://github.com/yourusername/waypoint.git
+   cd waypoint
+   ```
 
-### Database Management
+2. Run the setup script
+   ```bash
+   ./scripts/setup-local-dev.sh
+   ```
+
+3. Edit the generated `.env` file with your database credentials
+
+### Running the API Locally
+
+Use the provided script to run the API:
+
+```bash
+./scripts/run-api.sh
+```
+
+The API will be available at http://localhost:5258 with the following test endpoints:
+
+- GET: http://localhost:5258/api/test/db-connection - Tests database connectivity
+- GET: http://localhost:5258/api/test/create-tables - Creates database tables
+- GET: http://localhost:5258/api/test/seed-test-data - Creates test data
+- GET: http://localhost:5258/api/test/hosts - Lists all hosts
+- GET: http://localhost:5258/api/test/stays - Lists all stays
+
+## Database Management
 
 Database operations are managed through GitHub Actions workflows:
 
 - **Apply Migrations**: Sets up or updates the database schema
+- **Revert Migrations**: Reverts database schema changes
 - **Database Query**: Runs SQL queries against your database
 - **Database Backup**: Creates and stores backups of your database
 
+## Continuous Integration
+
+The project uses GitHub Actions for continuous integration:
+
+- **Backend Build**: Automatically builds the .NET solution on pushes and pull requests
+  - Ensures code compiles successfully
+  - Uploads build artifacts
+  - (Future) Runs automated tests
+
 For more information, see `.github/workflows/README.md`.
+
+## Contributing
+
+1. Create a new branch for your feature
+2. Make your changes
+3. Submit a pull request
+
+## License
+
+[MIT License](LICENSE)

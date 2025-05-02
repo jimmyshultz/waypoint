@@ -20,7 +20,8 @@ The Waypoint application uses [Neon](https://neon.tech/) as its PostgreSQL datab
    - Add the connection string to your `.env` file (see `.env.example` for format)
 
 4. **Apply migrations**:
-   - Run `./scripts/apply-migrations.sh` to create the schema
+   - Use the GitHub Actions "Apply Migrations" workflow to create the schema
+   - Or run the API and use the test endpoint (`/api/test/create-tables`)
 
 ## Migration Files
 
@@ -29,17 +30,16 @@ The Waypoint application uses [Neon](https://neon.tech/) as its PostgreSQL datab
 
 ## Running Migrations
 
-Migrations are managed through scripts in the `/scripts` directory:
+Migrations are managed through GitHub Actions workflows:
 
 ```bash
-# Apply migrations
-./scripts/apply-migrations.sh
+# Apply migrations (via GitHub Actions)
+1. Go to Actions tab in your repository
+2. Select "Apply Migrations" workflow
+3. Click "Run workflow"
 
-# Revert migrations (caution: this will delete all data)
-./scripts/revert-migrations.sh
-
-# Execute specific SQL queries
-echo "SELECT * FROM \"Users\";" | ./scripts/psql-query.sh
+# Alternatively, use the API test endpoint:
+curl http://localhost:5258/api/test/create-tables
 ```
 
 ## Creating New Migrations
@@ -58,8 +58,8 @@ Example migration format:
 -- Description: Adds tables for managing tours
 
 -- Update version
-INSERT INTO "DbVersionInfo" ("Version", "Description")
-VALUES ('1.1.0', 'Add tour tables');
+INSERT INTO "DbVersionInfo" ("Version", "Description", "AppliedAt")
+VALUES ('1.1.0', 'Add tour tables', NOW());
 
 -- Add new tables
 CREATE TABLE IF NOT EXISTS "Tours" (
@@ -81,6 +81,26 @@ DROP TABLE IF EXISTS "Tours";
 -- You don't need to remove the version entry
 ```
 
+## The DbVersionInfo Table
+
+The `DbVersionInfo` table tracks database migrations and schema versions:
+
+```sql
+CREATE TABLE IF NOT EXISTS "DbVersionInfo" (
+    "Id" SERIAL PRIMARY KEY,
+    "Version" VARCHAR(20) NOT NULL,
+    "Description" VARCHAR(255) NOT NULL,
+    "AppliedAt" TIMESTAMP NOT NULL DEFAULT NOW()
+);
+```
+
+Each migration creates an entry in this table with:
+- `Version`: The schema version (e.g., "1.0.0")
+- `Description`: A brief description of the migration
+- `AppliedAt`: When the migration was applied
+
+This table is essential for tracking database changes and should not be modified directly.
+
 ## Schema Overview
 
 The database consists of these main tables:
@@ -88,7 +108,6 @@ The database consists of these main tables:
 - `Users` - Stores user account information
 - `Hosts` - Stores host information with address and contact details
 - `Stays` - Records historical stays with hosts
-- `States` - Reference table of US state codes and names
 - `DbVersionInfo` - Tracks database schema versions
 
 For a more detailed schema description, see the main documentation at `docs/database.md`.
@@ -100,16 +119,4 @@ For a more detailed schema description, see the main documentation at `docs/data
 
 ## Backups
 
-Neon provides automatic backups of your database. You can also:
-
-1. Export your data manually using `pg_dump`:
-   ```bash
-   DB_CONNECTION_STRING=$(grep DB_CONNECTION_STRING .env | cut -d '=' -f2)
-   pg_dump "${DB_CONNECTION_STRING}" > waypoint_backup_$(date +%Y%m%d).sql
-   ```
-
-2. Restore from a backup using `psql`:
-   ```bash
-   DB_CONNECTION_STRING=$(grep DB_CONNECTION_STRING .env | cut -d '=' -f2)
-   psql "${DB_CONNECTION_STRING}" < waypoint_backup_20230101.sql
-   ``` 
+Neon provides automatic backups of your database. You can also use the GitHub Actions "Database Backup" workflow. 

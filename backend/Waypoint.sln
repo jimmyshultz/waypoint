@@ -1,0 +1,46 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 17
+VisualStudioVersion = 17.0.31903.59
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Waypoint.Api", "Waypoint.Api\Waypoint.Api.csproj", "{1492C774-8B87-4FEB-8FA4-FF329269E0EE}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Waypoint.Core", "Waypoint.Core\Waypoint.Core.csproj", "{C57A7D28-C538-4E49-9637-A848EEF0C346}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Waypoint.Infrastructure", "Waypoint.Infrastructure\Waypoint.Infrastructure.csproj", "{FA8AA268-7AC5-434F-8A0C-7E68EC0AE61A}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Waypoint.Identity", "Waypoint.Identity\Waypoint.Identity.csproj", "{F36E0E56-5FD2-4272-810D-1C534FD9713C}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Waypoint.Tests", "Waypoint.Tests\Waypoint.Tests.csproj", "{F8A7BCA4-D504-422F-B88B-48B62C66F02B}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{1492C774-8B87-4FEB-8FA4-FF329269E0EE}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{1492C774-8B87-4FEB-8FA4-FF329269E0EE}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{1492C774-8B87-4FEB-8FA4-FF329269E0EE}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{1492C774-8B87-4FEB-8FA4-FF329269E0EE}.Release|Any CPU.Build.0 = Release|Any CPU
+		{C57A7D28-C538-4E49-9637-A848EEF0C346}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{C57A7D28-C538-4E49-9637-A848EEF0C346}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{C57A7D28-C538-4E49-9637-A848EEF0C346}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{C57A7D28-C538-4E49-9637-A848EEF0C346}.Release|Any CPU.Build.0 = Release|Any CPU
+		{FA8AA268-7AC5-434F-8A0C-7E68EC0AE61A}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{FA8AA268-7AC5-434F-8A0C-7E68EC0AE61A}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{FA8AA268-7AC5-434F-8A0C-7E68EC0AE61A}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{FA8AA268-7AC5-434F-8A0C-7E68EC0AE61A}.Release|Any CPU.Build.0 = Release|Any CPU
+		{F36E0E56-5FD2-4272-810D-1C534FD9713C}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{F36E0E56-5FD2-4272-810D-1C534FD9713C}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{F36E0E56-5FD2-4272-810D-1C534FD9713C}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{F36E0E56-5FD2-4272-810D-1C534FD9713C}.Release|Any CPU.Build.0 = Release|Any CPU
+		{F8A7BCA4-D504-422F-B88B-48B62C66F02B}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{F8A7BCA4-D504-422F-B88B-48B62C66F02B}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{F8A7BCA4-D504-422F-B88B-48B62C66F02B}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{F8A7BCA4-D504-422F-B88B-48B62C66F02B}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+EndGlobal
